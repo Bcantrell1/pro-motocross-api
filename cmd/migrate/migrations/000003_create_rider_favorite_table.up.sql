@@ -1,0 +1,7 @@
+CREATE tABLE IF NOT EXISTS rider_favorite (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    rider_id INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    FOREIGN KEY (rider_id) REFERENCES riders (id) ON DELETE CASCADE
+);
