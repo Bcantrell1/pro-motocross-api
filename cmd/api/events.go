@@ -16,7 +16,7 @@ func (app *application) createEvent(c *gin.Context) {
 		return
 	}
 
-	err := app.models.Events.insert(&event)
+	err := app.models.Events.Insert(&event)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create the event."})
 		return
