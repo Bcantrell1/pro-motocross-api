@@ -4,12 +4,25 @@ import (
 	"database/sql"
 	"log"
 
+	_ "github.com/bcantrell1/pro-motocross-api/docs"
+
 	"github.com/bcantrell1/pro-motocross-api/internal/database"
 	"github.com/bcantrell1/pro-motocross-api/internal/env"
 
 	_ "github.com/joho/godotenv/autoload"
 	_ "github.com/mattn/go-sqlite3"
 )
+
+// @title Pro Motocross Rest API
+// @version 1.0
+// @description This is a rest API written in Go utilizing the Gin framework.
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Enter your bearer token in the format **Bearer &lt;token&gt;**
+
+// Apply the security definition to your endpoints
+// @security BearerAuth
 
 type application struct {
 	port      int

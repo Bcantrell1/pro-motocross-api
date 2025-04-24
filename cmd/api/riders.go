@@ -9,6 +9,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// CreateRider creates a new rider
+// @Summary Create a new rider
+// @Description Create a new rider with the provided details
+// @Tags riders
+// @Accept json
+// @Produce json
+// @Param rider body database.Rider true "Rider data"
+// @Success 201 {object} database.Rider
+// @Failure 400 {object} gin.H "Invalid request body"
+// @Failure 500 {object} gin.H "Failed to create the rider"
+// @Router /api/v1/riders [post]
 func (app *application) createRider(c *gin.Context) {
 	var rider database.Rider
 
@@ -27,6 +38,17 @@ func (app *application) createRider(c *gin.Context) {
 	c.JSON(http.StatusCreated, rider)
 }
 
+// GetRider returns a single rider
+// @Summary Get a rider by ID
+// @Description Get details of a rider by their ID
+// @Tags riders
+// @Produce json
+// @Param id path int true "Rider ID"
+// @Success 200 {object} database.Rider
+// @Failure 400 {object} gin.H "Invalid rider ID"
+// @Failure 404 {object} gin.H "No rider found at that ID"
+// @Failure 500 {object} gin.H "Server failed to get the requested rider"
+// @Router /api/v1/riders/{id} [get]
 func (app *application) getRider(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 
@@ -47,6 +69,14 @@ func (app *application) getRider(c *gin.Context) {
 	c.JSON(http.StatusOK, rider)
 }
 
+// GetAllRiders returns all riders
+// @Summary Get all riders
+// @Description Get a list of all riders
+// @Tags riders
+// @Produce json
+// @Success 200 {array} database.Rider
+// @Failure 500 {object} gin.H "Server failed to get all riders"
+// @Router /api/v1/riders [get]
 func (app *application) getAllRiders(c *gin.Context) {
 	riders, err := app.models.Riders.GetAll()
 
@@ -57,6 +87,19 @@ func (app *application) getAllRiders(c *gin.Context) {
 	c.JSON(http.StatusOK, riders)
 }
 
+// UpdateRider updates an existing rider
+// @Summary Update a rider
+// @Description Update an existing rider with the provided details
+// @Tags riders
+// @Accept json
+// @Produce json
+// @Param id path int true "Rider ID"
+// @Param rider body database.Rider true "Updated rider data"
+// @Success 200 {object} database.Rider
+// @Failure 400 {object} gin.H "Invalid rider ID or request body"
+// @Failure 404 {object} gin.H "Rider not found"
+// @Failure 500 {object} gin.H "Failed to update rider"
+// @Router /api/v1/riders/{id} [put]
 func (app *application) updateRider(c *gin.Context) {
 	id, err := strconv.Atoi("id")
 	if err != nil {
@@ -91,6 +134,15 @@ func (app *application) updateRider(c *gin.Context) {
 	c.JSON(http.StatusOK, updatedRider)
 }
 
+// DeleteRider deletes a rider
+// @Summary Delete a rider
+// @Description Delete a rider by their ID
+// @Tags riders
+// @Param id path int true "Rider ID"
+// @Success 204 "No Content"
+// @Failure 400 {object} gin.H "Invalid rider ID"
+// @Failure 500 {object} gin.H "Failed to delete the rider"
+// @Router /api/v1/riders/{id} [delete]
 func (app *application) deleteRider(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {

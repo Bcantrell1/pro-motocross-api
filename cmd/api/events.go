@@ -8,6 +8,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// CreateEvent creates a new event
+// @Summary Create a new event
+// @Description Create a new event with the provided details
+// @Tags events
+// @Accept json
+// @Produce json
+// @Param event body database.Event true "Event data"
+// @Success 201 {object} database.Event
+// @Failure 400 {object} gin.H "Invalid request body"
+// @Failure 500 {object} gin.H "Failed to create the event"
+// @Router /api/v1/events [post]
 func (app *application) createEvent(c *gin.Context) {
 	var event database.Event
 
@@ -28,6 +39,15 @@ func (app *application) createEvent(c *gin.Context) {
 	c.JSON(http.StatusCreated, event)
 }
 
+// GetEvent returns a single event
+// @Summary Returns a single event
+// @Description Returns a single event
+// @Tags events
+// @Accept json
+// @Produce json
+// @Param id path int true "Event Id"
+// @Success 200 {object} database.Event
+// @Router /api/v1/events/{id} [get]
 func (app *application) getEvent(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 
@@ -48,6 +68,14 @@ func (app *application) getEvent(c *gin.Context) {
 	c.JSON(http.StatusOK, event)
 }
 
+// GetAllEvents returns all events
+// @Summary Get all events
+// @Description Get a list of all events
+// @Tags events
+// @Produce json
+// @Success 200 {array} database.Event
+// @Failure 500 {object} gin.H "Server failed to get all events"
+// @Router /api/v1/events [get]
 func (app *application) getAllEvents(c *gin.Context) {
 	events, err := app.models.Events.GetAll()
 
@@ -58,6 +86,20 @@ func (app *application) getAllEvents(c *gin.Context) {
 	c.JSON(http.StatusOK, events)
 }
 
+// UpdateEvent updates an existing event
+// @Summary Update an existing event
+// @Description Update an existing event with the provided details
+// @Tags events
+// @Accept json
+// @Produce json
+// @Param id path int true "Event ID"
+// @Param event body database.Event true "Updated event data"
+// @Success 200 {object} database.Event
+// @Failure 400 {object} gin.H "Invalid event ID or request body"
+// @Failure 403 {object} gin.H "Unauthorized to update the event"
+// @Failure 404 {object} gin.H "Event not found"
+// @Failure 500 {object} gin.H "Failed to update event"
+// @Router /api/v1/events/{id} [put]
 func (app *application) updateEvent(c *gin.Context) {
 	id, err := strconv.Atoi("id")
 	if err != nil {
@@ -98,6 +140,17 @@ func (app *application) updateEvent(c *gin.Context) {
 	c.JSON(http.StatusOK, updatedEvent)
 }
 
+// DeleteEvent deletes an event
+// @Summary Delete an event
+// @Description Delete an event by its ID
+// @Tags events
+// @Param id path int true "Event ID"
+// @Success 204 "No Content"
+// @Failure 400 {object} gin.H "Invalid event ID"
+// @Failure 401 {object} gin.H "Unauthorized to delete the event"
+// @Failure 404 {object} gin.H "Event not found"
+// @Failure 500 {object} gin.H "Failed to delete the event"
+// @Router /api/v1/events/{id} [delete]
 func (app *application) deleteEvent(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -130,6 +183,19 @@ func (app *application) deleteEvent(c *gin.Context) {
 	c.JSON(http.StatusNoContent, nil)
 }
 
+// AddAttendeeToEvent adds a rider to an event
+// @Summary Add a rider to an event
+// @Description Add a rider as an attendee to an event
+// @Tags attendees
+// @Param id path int true "Event ID"
+// @Param riderId path int true "Rider ID"
+// @Success 201 {object} database.Attendee
+// @Failure 400 {object} gin.H "Invalid event or rider ID"
+// @Failure 401 {object} gin.H "Unauthorized to add attendee"
+// @Failure 404 {object} gin.H "Event or rider not found"
+// @Failure 409 {object} gin.H "Rider already signed up for this event"
+// @Failure 500 {object} gin.H "Failed to add rider to event"
+// @Router /api/v1/events/{id}/attendees/{riderId} [post]
 func (app *application) addAttendeeToEvent(c *gin.Context) {
 	eventId, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -194,6 +260,15 @@ func (app *application) addAttendeeToEvent(c *gin.Context) {
 	c.JSON(http.StatusCreated, attendee)
 }
 
+// GetAttendeesForEvent gets all attendees for an event
+// @Summary Get attendees for an event
+// @Description Get a list of riders attending an event
+// @Tags attendees
+// @Param id path int true "Event ID"
+// @Success 200 {array} database.Rider
+// @Failure 400 {object} gin.H "Invalid event ID"
+// @Failure 500 {object} gin.H "Failed to retrieve attendees"
+// @Router /api/v1/events/{id}/attendees [get]
 func (app *application) getAttendeesForEvent(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -210,6 +285,17 @@ func (app *application) getAttendeesForEvent(c *gin.Context) {
 	c.JSON(http.StatusOK, riders)
 }
 
+// DeleteAttendeeFromEvent removes a rider from an event
+// @Summary Remove a rider from an event
+// @Description Remove a rider as an attendee from an event
+// @Tags attendees
+// @Param id path int true "Event ID"
+// @Param riderId path int true "Rider ID"
+// @Success 204 "No Content"
+// @Failure 400 {object} gin.H "Invalid event or rider ID"
+// @Failure 401 {object} gin.H "Unauthorized as you don't own the event"
+// @Failure 500 {object} gin.H "Failed to delete attendee"
+// @Router /api/v1/events/{id}/attendees/{riderId} [delete]
 func (app *application) deleteAttendeeFromEvent(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -246,6 +332,15 @@ func (app *application) deleteAttendeeFromEvent(c *gin.Context) {
 
 }
 
+// GetEventsByAttendee gets all events for an attendee
+// @Summary Get events for an attendee
+// @Description Get a list of events that a rider is attending
+// @Tags attendees
+// @Param id path int true "Attendee ID"
+// @Success 200 {array} database.Event
+// @Failure 400 {object} gin.H "Invalid attendee ID"
+// @Failure 500 {object} gin.H "Failed to retrieve events"
+// @Router /api/v1/attendees/{id}/events [get]
 func (app *application) getEventsByAttendee(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {

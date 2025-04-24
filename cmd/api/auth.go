@@ -25,6 +25,17 @@ type loginResponse struct {
 	Token string `json:"token"`
 }
 
+// RegisterUser registers a new user
+// @Summary Register a new user
+// @Description Create a new user account with the provided details
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param register body registerRequest true "User registration data"
+// @Success 201 {object} database.User
+// @Failure 400 {object} gin.H "Invalid request body"
+// @Failure 500 {object} gin.H "Failed to create the user"
+// @Router /api/v1/register [post]
 func (app *application) registerUser(c *gin.Context) {
 	var register registerRequest
 
@@ -55,6 +66,19 @@ func (app *application) registerUser(c *gin.Context) {
 	c.JSON(http.StatusCreated, user)
 }
 
+// Login logs in a user and returns a JWT token
+// @Summary Log in a user
+// @Description Authenticate a user and return a JWT token
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param login body loginRequest true "User login credentials"
+// @Success 200 {object} loginResponse
+// @Failure 400 {object} gin.H "Invalid request body"
+// @Failure 401 {object} gin.H "Invalid password"
+// @Failure 404 {object} gin.H "User not found"
+// @Failure 500 {object} gin.H "Error generating token"
+// @Router /api/v1/login [post]
 func (app *application) login(c *gin.Context) {
 
 	var auth loginRequest
