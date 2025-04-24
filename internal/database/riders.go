@@ -30,7 +30,7 @@ func (m *RiderModel) Insert(rider *Rider) error {
 
 	query := "INSERT INTO riders (first_name, last_name, number, team, bike_brand, class, nationality, date_of_birth, career_points, status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"
 
-	return m.DB.QueryRowContext(ctx, query, rider.FirstName, rider.LastName, rider.Number, rider.Team, rider.BikeBrand, rider.Class, rider.Nationality, rider.DateOfBirth, rider.Status).Scan(&rider.Id)
+	return m.DB.QueryRowContext(ctx, query, rider.FirstName, rider.LastName, rider.Number, rider.Team, rider.BikeBrand, rider.Class, rider.Nationality, rider.DateOfBirth, rider.CareerPoints, rider.Status).Scan(&rider.Id)
 }
 
 func (m *RiderModel) GetAll() ([]*Rider, error) {
