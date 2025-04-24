@@ -23,5 +23,9 @@ func (m *UserModel) Insert(user *User) error {
 
 	query := "INSERT INTO users (email, password, name) VALUES ($1, $2, $3) RETURNING id"
 
-	return m.DB.QueryRowContext(ctx, query, user.Email, user.Password, user.Name).Scan(&user.Id)
+	err := m.DB.QueryRowContext(ctx, query, user.Email, user.Password, user.Name).Scan(&user.Id)
+	if err != nil {
+		return err
+	}
+	return nil
 }
