@@ -24,6 +24,9 @@ func (app *application) routes() http.Handler {
 		v1.PUT("/riders/:id", app.updateRider)
 		v1.DELETE("/riders/:id", app.deleteRider)
 
+		v1.POST("/events/:id/attendees/:riderId", app.addAttendeeToEvent)
+		v1.POST("/events/:id/attendees", app.getAttendeesForEvent)
+
 		v1.POST("/auth/register", app.registerUser)
 	}
 
