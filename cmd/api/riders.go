@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -19,6 +20,7 @@ func (app *application) createRider(c *gin.Context) {
 	err := app.models.Riders.Insert(&rider)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create the rider."})
+		fmt.Println(err.Error())
 		return
 	}
 

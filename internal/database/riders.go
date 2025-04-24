@@ -28,7 +28,7 @@ func (m *RiderModel) Insert(rider *Rider) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	query := "INSERT INTO riders (first_name, last_name, number, team, bike_brand, class, nationality, date_of_birth, career_points, status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"
+	query := "INSERT INTO riders (first_name, last_name, number, team, bike_brand, class, nationality, date_of_birth, career_points, status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id"
 
 	return m.DB.QueryRowContext(ctx, query, rider.FirstName, rider.LastName, rider.Number, rider.Team, rider.BikeBrand, rider.Class, rider.Nationality, rider.DateOfBirth, rider.CareerPoints, rider.Status).Scan(&rider.Id)
 }
