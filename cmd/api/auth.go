@@ -35,7 +35,7 @@ type loginResponse struct {
 // @Success 201 {object} database.User
 // @Failure 400 {object} gin.H "Invalid request body"
 // @Failure 500 {object} gin.H "Failed to create the user"
-// @Router /api/v1/register [post]
+// @Router /api/v1/auth/register [post]
 func (app *application) registerUser(c *gin.Context) {
 	var register registerRequest
 
@@ -78,7 +78,7 @@ func (app *application) registerUser(c *gin.Context) {
 // @Failure 401 {object} gin.H "Invalid password"
 // @Failure 404 {object} gin.H "User not found"
 // @Failure 500 {object} gin.H "Error generating token"
-// @Router /api/v1/login [post]
+// @Router /api/v1/auth/login [post]
 func (app *application) login(c *gin.Context) {
 
 	var auth loginRequest

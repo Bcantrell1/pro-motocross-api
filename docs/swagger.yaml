@@ -139,6 +139,74 @@ paths:
       summary: Get events for an attendee
       tags:
       - attendees
+  /api/v1/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate a user and return a JWT token
+      parameters:
+      - description: User login credentials
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/main.loginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.loginResponse'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/gin.H'
+        "401":
+          description: Invalid password
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Error generating token
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Log in a user
+      tags:
+      - auth
+  /api/v1/auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user account with the provided details
+      parameters:
+      - description: User registration data
+        in: body
+        name: register
+        required: true
+        schema:
+          $ref: '#/definitions/main.registerRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/database.User'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to create the user
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Register a new user
+      tags:
+      - auth
   /api/v1/events:
     get:
       description: Get a list of all events
@@ -380,74 +448,6 @@ paths:
       summary: Add a rider to an event
       tags:
       - attendees
-  /api/v1/login:
-    post:
-      consumes:
-      - application/json
-      description: Authenticate a user and return a JWT token
-      parameters:
-      - description: User login credentials
-        in: body
-        name: login
-        required: true
-        schema:
-          $ref: '#/definitions/main.loginRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/main.loginResponse'
-        "400":
-          description: Invalid request body
-          schema:
-            $ref: '#/definitions/gin.H'
-        "401":
-          description: Invalid password
-          schema:
-            $ref: '#/definitions/gin.H'
-        "404":
-          description: User not found
-          schema:
-            $ref: '#/definitions/gin.H'
-        "500":
-          description: Error generating token
-          schema:
-            $ref: '#/definitions/gin.H'
-      summary: Log in a user
-      tags:
-      - auth
-  /api/v1/register:
-    post:
-      consumes:
-      - application/json
-      description: Create a new user account with the provided details
-      parameters:
-      - description: User registration data
-        in: body
-        name: register
-        required: true
-        schema:
-          $ref: '#/definitions/main.registerRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/database.User'
-        "400":
-          description: Invalid request body
-          schema:
-            $ref: '#/definitions/gin.H'
-        "500":
-          description: Failed to create the user
-          schema:
-            $ref: '#/definitions/gin.H'
-      summary: Register a new user
-      tags:
-      - auth
   /api/v1/riders:
     get:
       description: Get a list of all riders
