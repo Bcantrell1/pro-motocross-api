@@ -28,6 +28,9 @@ func (app *application) createRider(c *gin.Context) {
 		return
 	}
 
+	user := app.GetUserFromContext(c)
+	rider.OwnerId = user.Id
+
 	err := app.models.Riders.Insert(&rider)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create the rider."})
@@ -101,12 +104,13 @@ func (app *application) getAllRiders(c *gin.Context) {
 // @Failure 500 {object} gin.H "Failed to update rider"
 // @Router /api/v1/riders/{id} [put]
 func (app *application) updateRider(c *gin.Context) {
-	id, err := strconv.Atoi("id")
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid rider Id."})
 		return
 	}
 
+	user := app.GetUserFromContext(c)
 	existingRider, err := app.models.Riders.Get(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to Get rider Id."})
@@ -117,7 +121,14 @@ func (app *application) updateRider(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Rider was not found."})
 	}
 
-	updatedRider := &database.Rider{}
+	if existingRider.OwnerId != user.Id {
+		c.JSON(http.StatusForbidden, gin.H{"error": "You are not authorized to update a rider you don't own."})
+		return
+	}
+
+	updatedRider := &database.Rider{
+		Id: id,
+	}
 
 	if err := c.ShouldBindJSON(updatedRider); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -147,6 +158,19 @@ func (app *application) deleteRider(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid rider Id."})
+		return
+	}
+
+	user := app.GetUserFromContext(c)
+	existingRider, err := app.models.Riders.Get(id)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve the requested rider."})
+		return
+	}
+
+	if user.Id != existingRider.Id {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "You are not authorized to delete the rider!"})
 		return
 	}
 

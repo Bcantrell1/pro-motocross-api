@@ -101,7 +101,7 @@ func (app *application) getAllEvents(c *gin.Context) {
 // @Failure 500 {object} gin.H "Failed to update event"
 // @Router /api/v1/events/{id} [put]
 func (app *application) updateEvent(c *gin.Context) {
-	id, err := strconv.Atoi("id")
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid event Id."})
 		return
@@ -119,7 +119,7 @@ func (app *application) updateEvent(c *gin.Context) {
 	}
 
 	if existingEvent.OwnerId != user.Id {
-		c.JSON(http.StatusForbidden, gin.H{"error": "You are not authorized to update a rider you don't own."})
+		c.JSON(http.StatusForbidden, gin.H{"error": "You are not authorized to update an event you don't own."})
 		return
 	}
 

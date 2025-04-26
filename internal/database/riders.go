@@ -12,6 +12,7 @@ type RiderModel struct {
 
 type Rider struct {
 	Id           int    `json:"id"`
+	OwnerId      int    `json:"ownerId" binding:"required"`
 	FirstName    string `json:"firstName" binding:"required,min=3"`
 	LastName     string `json:"lastName" binding:"required,min=3"`
 	Number       int    `json:"number" binding:"required"`
@@ -28,9 +29,9 @@ func (m *RiderModel) Insert(rider *Rider) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	query := "INSERT INTO riders (first_name, last_name, number, team, bike_brand, class, nationality, date_of_birth, career_points, status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id"
+	query := "INSERT INTO riders (owner_id, first_name, last_name, number, team, bike_brand, class, nationality, date_of_birth, career_points, status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id"
 
-	return m.DB.QueryRowContext(ctx, query, rider.FirstName, rider.LastName, rider.Number, rider.Team, rider.BikeBrand, rider.Class, rider.Nationality, rider.DateOfBirth, rider.CareerPoints, rider.Status).Scan(&rider.Id)
+	return m.DB.QueryRowContext(ctx, query, rider.OwnerId, rider.FirstName, rider.LastName, rider.Number, rider.Team, rider.BikeBrand, rider.Class, rider.Nationality, rider.DateOfBirth, rider.CareerPoints, rider.Status).Scan(&rider.Id)
 }
 
 func (m *RiderModel) GetAll() ([]*Rider, error) {
@@ -51,7 +52,7 @@ func (m *RiderModel) GetAll() ([]*Rider, error) {
 	for rows.Next() {
 		var rider Rider
 
-		err := rows.Scan(&rider.Id, &rider.FirstName, &rider.LastName, &rider.Number, &rider.Team, &rider.BikeBrand, &rider.Class, &rider.Nationality, &rider.DateOfBirth, &rider.CareerPoints, &rider.Status)
+		err := rows.Scan(&rider.Id, &rider.OwnerId, &rider.FirstName, &rider.LastName, &rider.Number, &rider.Team, &rider.BikeBrand, &rider.Class, &rider.Nationality, &rider.DateOfBirth, &rider.CareerPoints, &rider.Status)
 		if err != nil {
 			return nil, err
 		}
@@ -74,7 +75,7 @@ func (m *RiderModel) Get(id int) (*Rider, error) {
 
 	var rider Rider
 
-	err := m.DB.QueryRowContext(ctx, query, id).Scan(&rider.Id, &rider.FirstName, &rider.LastName, &rider.Number, &rider.Team, &rider.BikeBrand, &rider.Class, &rider.Nationality, &rider.DateOfBirth, &rider.CareerPoints, &rider.Status)
+	err := m.DB.QueryRowContext(ctx, query, id).Scan(&rider.Id, &rider.OwnerId, &rider.FirstName, &rider.LastName, &rider.Number, &rider.Team, &rider.BikeBrand, &rider.Class, &rider.Nationality, &rider.DateOfBirth, &rider.CareerPoints, &rider.Status)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
@@ -89,9 +90,9 @@ func (m *RiderModel) Update(rider *Rider) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	query := "UPDATE riders SET first_name = $1, last_name = $2, number = $3, team = $4, bike_brand = $5, class = $6, nationality = $7, date_of_birth = $8, career_points = $9, status = $10 WHERE id = $11"
+	query := "UPDATE riders SET owner_id = $1, first_name = $2, last_name = $3, number = $4, team = $5, bike_brand = $6, class = $7, nationality = $8, date_of_birth = $9, career_points = $10, status = $11 WHERE id = $12"
 
-	_, err := m.DB.ExecContext(ctx, query, rider.FirstName, rider.LastName, rider.Number, rider.Team, rider.BikeBrand, rider.Class, rider.Nationality, rider.DateOfBirth, rider.CareerPoints, rider.Status, rider.Id)
+	_, err := m.DB.ExecContext(ctx, query, rider.OwnerId, rider.FirstName, rider.LastName, rider.Number, rider.Team, rider.BikeBrand, rider.Class, rider.Nationality, rider.DateOfBirth, rider.CareerPoints, rider.Status, rider.Id)
 	if err != nil {
 		return err
 	}
