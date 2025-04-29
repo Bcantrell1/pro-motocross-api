@@ -10,7 +10,7 @@ import (
 )
 
 // CreateRider creates a new rider
-// @Summary Create a new rider
+// @Summary Create a new rider ** Auth Required **
 // @Description Create a new rider with the provided details
 // @Tags riders
 // @Accept json
@@ -91,7 +91,7 @@ func (app *application) getAllRiders(c *gin.Context) {
 }
 
 // UpdateRider updates an existing rider
-// @Summary Update a rider
+// @Summary Update a rider ** Auth Required **
 // @Description Update an existing rider with the provided details
 // @Tags riders
 // @Accept json
@@ -146,7 +146,7 @@ func (app *application) updateRider(c *gin.Context) {
 }
 
 // DeleteRider deletes a rider
-// @Summary Delete a rider
+// @Summary Delete a rider ** Auth Required **
 // @Description Delete a rider by their ID
 // @Tags riders
 // @Param id path int true "Rider ID"

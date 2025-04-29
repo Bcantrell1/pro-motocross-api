@@ -9,7 +9,7 @@ import (
 )
 
 // CreateEvent creates a new event
-// @Summary Create a new event
+// @Summary Create a new event ** Auth Required **
 // @Description Create a new event with the provided details
 // @Tags events
 // @Accept json
@@ -87,7 +87,7 @@ func (app *application) getAllEvents(c *gin.Context) {
 }
 
 // UpdateEvent updates an existing event
-// @Summary Update an existing event
+// @Summary Update an existing event ** Auth Required **
 // @Description Update an existing event with the provided details
 // @Tags events
 // @Accept json
@@ -141,7 +141,7 @@ func (app *application) updateEvent(c *gin.Context) {
 }
 
 // DeleteEvent deletes an event
-// @Summary Delete an event
+// @Summary Delete an event ** Auth Required **
 // @Description Delete an event by its ID
 // @Tags events
 // @Param id path int true "Event ID"
