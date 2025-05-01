@@ -54,6 +54,8 @@ definitions:
         type: string
       number:
         type: integer
+      ownerId:
+        type: integer
       status:
         type: string
       team:
@@ -62,6 +64,7 @@ definitions:
     - firstName
     - lastName
     - number
+    - ownerId
     type: object
   database.User:
     properties:
@@ -101,10 +104,13 @@ definitions:
       password:
         minLength: 8
         type: string
+      secret:
+        type: string
     required:
     - email
     - name
     - password
+    - secret
     type: object
 info:
   contact: {}
@@ -181,7 +187,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Create a new user account with the provided details
+      description: Create a new user account with the provided details and the secret
       parameters:
       - description: User registration data
         in: body
@@ -252,7 +258,7 @@ paths:
           description: Failed to create the event
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Create a new event
+      summary: Create a new event ** Auth Required **
       tags:
       - events
   /api/v1/events/{id}:
@@ -283,7 +289,7 @@ paths:
           description: Failed to delete the event
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Delete an event
+      summary: Delete an event ** Auth Required **
       tags:
       - events
     get:
@@ -345,7 +351,7 @@ paths:
           description: Failed to update event
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Update an existing event
+      summary: Update an existing event ** Auth Required **
       tags:
       - events
   /api/v1/events/{id}/attendees:
@@ -493,7 +499,7 @@ paths:
           description: Failed to create the rider
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Create a new rider
+      summary: Create a new rider ** Auth Required **
       tags:
       - riders
   /api/v1/riders/{id}:
@@ -516,7 +522,7 @@ paths:
           description: Failed to delete the rider
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Delete a rider
+      summary: Delete a rider ** Auth Required **
       tags:
       - riders
     get:
@@ -584,7 +590,7 @@ paths:
           description: Failed to update rider
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Update a rider
+      summary: Update a rider ** Auth Required **
       tags:
       - riders
 security:

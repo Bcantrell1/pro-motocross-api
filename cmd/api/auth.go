@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/bcantrell1/pro-motocross-api/internal/database"
+	"github.com/bcantrell1/pro-motocross-api/internal/env"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 	"golang.org/x/crypto/bcrypt"
@@ -14,6 +15,7 @@ type registerRequest struct {
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required,min=8"`
 	Name     string `json:"name" binding:"required,min=2"`
+	Secret 	 string `json:"secret" binding:"required"`
 }
 
 type loginRequest struct {
@@ -27,7 +29,7 @@ type loginResponse struct {
 
 // RegisterUser registers a new user
 // @Summary Register a new user
-// @Description Create a new user account with the provided details
+// @Description Create a new user account with the provided details and the secret
 // @Tags auth
 // @Accept json
 // @Produce json
@@ -41,6 +43,12 @@ func (app *application) registerUser(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&register); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	expectedSecret := env.GetEnvString("REGISTER_SECRET", "secret_to_register")
+	if register.Secret != expectedSecret {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid registration secret"})
 		return
 	}
 

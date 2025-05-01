@@ -116,7 +116,7 @@ const docTemplate = `{
         },
         "/api/v1/auth/register": {
             "post": {
-                "description": "Create a new user account with the provided details",
+                "description": "Create a new user account with the provided details and the secret",
                 "consumes": [
                     "application/json"
                 ],
@@ -199,7 +199,7 @@ const docTemplate = `{
                 "tags": [
                     "events"
                 ],
-                "summary": "Create a new event",
+                "summary": "Create a new event ** Auth Required **",
                 "parameters": [
                     {
                         "description": "Event data",
@@ -275,7 +275,7 @@ const docTemplate = `{
                 "tags": [
                     "events"
                 ],
-                "summary": "Update an existing event",
+                "summary": "Update an existing event ** Auth Required **",
                 "parameters": [
                     {
                         "type": "integer",
@@ -332,7 +332,7 @@ const docTemplate = `{
                 "tags": [
                     "events"
                 ],
-                "summary": "Delete an event",
+                "summary": "Delete an event ** Auth Required **",
                 "parameters": [
                     {
                         "type": "integer",
@@ -562,7 +562,7 @@ const docTemplate = `{
                 "tags": [
                     "riders"
                 ],
-                "summary": "Create a new rider",
+                "summary": "Create a new rider ** Auth Required **",
                 "parameters": [
                     {
                         "description": "Rider data",
@@ -653,7 +653,7 @@ const docTemplate = `{
                 "tags": [
                     "riders"
                 ],
-                "summary": "Update a rider",
+                "summary": "Update a rider ** Auth Required **",
                 "parameters": [
                     {
                         "type": "integer",
@@ -704,7 +704,7 @@ const docTemplate = `{
                 "tags": [
                     "riders"
                 ],
-                "summary": "Delete a rider",
+                "summary": "Delete a rider ** Auth Required **",
                 "parameters": [
                     {
                         "type": "integer",
@@ -787,7 +787,8 @@ const docTemplate = `{
             "required": [
                 "firstName",
                 "lastName",
-                "number"
+                "number",
+                "ownerId"
             ],
             "properties": {
                 "bikeBrand": {
@@ -817,6 +818,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "number": {
+                    "type": "integer"
+                },
+                "ownerId": {
                     "type": "integer"
                 },
                 "status": {
@@ -874,7 +878,8 @@ const docTemplate = `{
             "required": [
                 "email",
                 "name",
-                "password"
+                "password",
+                "secret"
             ],
             "properties": {
                 "email": {
@@ -887,6 +892,9 @@ const docTemplate = `{
                 "password": {
                     "type": "string",
                     "minLength": 8
+                },
+                "secret": {
+                    "type": "string"
                 }
             }
         }
